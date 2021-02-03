@@ -9,7 +9,7 @@ ENV REACT_APP_BLOOMFILTER_API=$BLOOMFILTER_API
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
-RUN npm install react-scripts@3.4.1 -g
+RUN npm install react-scripts@3.4.1 -g 
 COPY . ./
 RUN npm run build
 
