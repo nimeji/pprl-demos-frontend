@@ -10,34 +10,20 @@ import {
 import { v1 as uuidv1 } from 'uuid';
 import BorderlessTableCell from './TableCell';
 
-// https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Dice%27s_coefficient#Javascript
 function diceCoefficient(l, r) {
-  if (l.length < 2 || r.length < 2) return 0;
+  if (l.length < 1 || l.length !== r.length) return 0;
 
-  const lBigrams = new Map();
-  for (let i = 0; i < l.length - 1; i += 1) {
-    const bigram = l.substr(i, 2);
-    const count = lBigrams.has(bigram)
-      ? lBigrams.get(bigram) + 1
-      : 1;
+  let intersection = 0;
+  let left = 0;
+  let right = 0;
 
-    lBigrams.set(bigram, count);
+  for (let i = 0; i < l.length; i += 1) {
+    if (l[i] === '1') left += 1;
+    if (r[i] === '1') right += 1;
+    if (l[i] === '1' && r[i] === '1') intersection += 1;
   }
 
-  let intersectionSize = 0;
-  for (let i = 0; i < r.length - 1; i += 1) {
-    const bigram = r.substr(i, 2);
-    const count = lBigrams.has(bigram)
-      ? lBigrams.get(bigram)
-      : 0;
-
-    if (count > 0) {
-      lBigrams.set(bigram, count - 1);
-      intersectionSize += 1;
-    }
-  }
-
-  return (2.0 * intersectionSize) / (l.length + r.length - 2);
+  return (2.0 * intersection) / (left + right);
 }
 
 function BloomFilterTable(props) {
