@@ -2,18 +2,29 @@ import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { green, red } from '@material-ui/core/colors';
-import http from 'http';
+import axios from 'axios';
 
 function OnlineStatusIcon({ url }) {
+  // eslint-disable-next-line no-unused-vars
   const [online, setOnline] = useState(false);
 
   useEffect(() => {
     if (url) {
-      http.request(url, (response) => {
-        if (response.statusCode === 200 || response.statusCode === 404) {
-          setOnline(true);
-        }
-      }).end();
+      axios.get(url)
+        .then((response) => {
+          if (response.status === 200) {
+            setOnline(true);
+          } else {
+            setOnline(false);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 404) {
+            setOnline(true);
+          } else {
+            setOnline(false);
+          }
+        });
     }
   }, [url]);
 

@@ -4,13 +4,13 @@ WORKDIR /app
 ARG PPIRL_API
 ARG BLOOMFILTER_API
 ENV PATH /app/node_modules/.bin:$PATH
-ENV REACT_APP_PPIRL_API=$PPIRL_API
-ENV REACT_APP_BLOOMFILTER_API=$BLOOMFILTER_API
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
 RUN npm install react-scripts@3.4.1 -g 
 COPY . ./
+ENV REACT_APP_PPIRL_API=$PPIRL_API
+ENV REACT_APP_BLOOMFILTER_API=$BLOOMFILTER_API
 RUN npm run build
 
 #production environment

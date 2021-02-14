@@ -17,7 +17,7 @@ class MaskSelect extends React.Component {
   async componentDidMount() {
     const { onChange } = this.props;
 
-    const result = await Axios.get(urljoin(window.ENV.API.PPIRL, '/masks'));
+    const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, '/masks'));
 
     if (result && result.data && result.data.masks && result.data.masks.length > 0) {
       this.setState({ masks: result.data.masks });
