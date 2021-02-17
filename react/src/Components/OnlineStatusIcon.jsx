@@ -19,7 +19,7 @@ function OnlineStatusIcon({ url }) {
           }
         })
         .catch((error) => {
-          if (error.response.status === 404) {
+          if (error.response && error.response.status === 404) {
             setOnline(true);
           } else {
             setOnline(false);
