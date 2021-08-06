@@ -44,20 +44,28 @@ export default class PPIRLDemo extends React.Component {
     const { mask, similarityRange } = this.state;
     const [min, max] = similarityRange;
 
-    const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/mask/${mask}?min=${min}&max=${max}`));
+    try {
+      const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/mask/${mask}?min=${min}&max=${max}`));
 
-    if (result && result.data) {
-      this.setState({ tableData: result.data });
-      this.setState({ id: result.data.id });
+      if (result && result.data) {
+        this.setState({ tableData: result.data });
+        this.setState({ id: result.data.id });
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   }
 
   async refreshId() {
     const { id, mask } = this.state;
-
-    const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/id/${id}/mask/${mask}`));
-
-    if (result && result.data) this.setState({ tableData: result.data });
+    try {
+      const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/id/${id}/mask/${mask}`));
+      if (result && result.data) this.setState({ tableData: result.data });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
   }
 
   render() {
