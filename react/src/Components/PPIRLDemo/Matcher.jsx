@@ -84,7 +84,7 @@ class Matcher extends React.Component {
 
       elements = (
         <Box display="flex" flexDirection="column">
-          <Box display="flex">
+          <Box display="flex" mb={2}>
             {result ? <Check /> : <Clear />}
             {text}
           </Box>
