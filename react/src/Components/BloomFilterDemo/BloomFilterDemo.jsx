@@ -40,10 +40,8 @@ class BloomFilterDemo extends React.Component {
     event.preventDefault();
 
     const { formData } = this.state;
-    console.log(formData);
 
     const result = await Axios.post(process.env.REACT_APP_BLOOMFILTER_API, formData);
-    console.log(result);
 
     if (result && result.data && result.data.result) {
       // for testing only
