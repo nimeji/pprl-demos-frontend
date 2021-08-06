@@ -1,9 +1,10 @@
 import React from 'react';
 import Axios from 'axios';
-import { Box, Container } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import urljoin from 'url-join';
 import OptionsPanel from './OptionsPanel';
 import Table from './Table';
+import Matcher from './Matcher';
 
 export default class PPIRLDemo extends React.Component {
   constructor(props) {
@@ -54,8 +55,8 @@ export default class PPIRLDemo extends React.Component {
     } = this.state;
 
     return (
-      <Container maxWidth="md">
-        <Box p={5}>
+      <Box height="100%" style={{ backgroundColor: 'rgb(220, 220, 220)' }}>
+        <Box display="flex" flexDirection="column" justifyContent="spaceBetween" alignItems="center" height="100%" marginX="auto">
           <OptionsPanel
             id={id}
             onIdChange={this.onIdChange}
@@ -64,9 +65,10 @@ export default class PPIRLDemo extends React.Component {
             mask={mask}
             onMaskChange={this.onMaskChange}
           />
+          <Table data={tableData} highlight={highlight} />
+          <Matcher id={id} />
         </Box>
-        <Table data={tableData} highlight={highlight} />
-      </Container>
+      </Box>
     );
   }
 }

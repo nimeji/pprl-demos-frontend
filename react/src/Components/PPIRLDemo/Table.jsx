@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import { Box, Paper } from '@material-ui/core';
 import { TableField } from './TableField';
 import TableCompoundField from './TableCompoundField';
 
@@ -41,7 +42,15 @@ class Table extends React.Component {
   }
 
   render() {
-    return this.generateFields();
+    return (
+      <Box p={5}>
+        <Paper rounded="true">
+          <Box p={1}>
+            {this.generateFields()}
+          </Box>
+        </Paper>
+      </Box>
+    );
   }
 }
 

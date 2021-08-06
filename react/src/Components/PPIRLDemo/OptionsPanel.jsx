@@ -13,22 +13,24 @@ function OptionsPanel(props) {
   } = props;
 
   return (
-    <Paper rounded="true" elevation={5}>
-      <Box p={1}>
-        <Typography variant="h5">Optionen</Typography>
-      </Box>
-      <Divider />
-      <Box p={3} display="flex" justifyContent="flex-end">
-        <IntegerField defaultValue={id} onChange={onIdChange} />
-        <FormControlLabel
-          value="top"
-          control={<Switch color="primary" onChange={(event) => onHighlightChange(event.target.checked)} checked={highlight} />}
-          label="Highlighting"
-          labelPlacement="top"
-        />
-        <MaskSelect mask={mask} onChange={onMaskChange} />
-      </Box>
-    </Paper>
+    <Box p={5}>
+      <Paper rounded="true" elevation={5}>
+        <Box p={1}>
+          <Typography variant="h5">Optionen</Typography>
+        </Box>
+        <Divider />
+        <Box p={3} display="flex" justifyContent="flex-end">
+          <IntegerField defaultValue={id} onChange={onIdChange} />
+          <FormControlLabel
+            value="top"
+            control={<Switch color="primary" onChange={(event) => onHighlightChange(event.target.checked)} checked={highlight} />}
+            label="Highlighting"
+            labelPlacement="top"
+          />
+          <MaskSelect mask={mask} onChange={onMaskChange} />
+        </Box>
+      </Paper>
+    </Box>
   );
 }
 
