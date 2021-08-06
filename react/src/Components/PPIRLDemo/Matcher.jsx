@@ -22,6 +22,14 @@ class Matcher extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    const { id } = this.props;
+
+    if (prevProps.id !== id) {
+      this.setState({ showResult: false });
+    }
+  }
+
   async checkResult(ismatch) {
     const { id } = this.props;
     const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/ismatch/${id}`));

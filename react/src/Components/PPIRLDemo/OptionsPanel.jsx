@@ -1,15 +1,14 @@
 import {
-  Box, Divider, FormControlLabel, Paper, Switch, Typography,
+  Box, Divider, FormControlLabel, Paper, Switch, Typography, Slider,
 } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import MaskSelect from './MaskSelect';
-import IntegerField from './IntegerField';
 
 function OptionsPanel(props) {
   const {
-    id, highlight, mask,
-    onIdChange, onHighlightChange, onMaskChange,
+    similarityRange, highlight, mask,
+    onSimilarityRangeChange, onHighlightChange, onMaskChange,
   } = props;
 
   return (
@@ -20,7 +19,22 @@ function OptionsPanel(props) {
         </Box>
         <Divider />
         <Box p={3} display="flex" justifyContent="flex-end">
-          <IntegerField defaultValue={id} onChange={onIdChange} />
+          <Box width="200px" mx={5}>
+            <Typography id="similarity-range-label" gutterBottom>
+              Ähnlichkeit
+            </Typography>
+            <Slider
+              step={0.01}
+              min={0}
+              max={1}
+              marks={[{ value: 0, label: 'verschieden' }, { value: 1, label: 'gleich' }]}
+              valueLabelDisplay="auto"
+              value={similarityRange}
+              aria-labelledby="similarity-range-label"
+              onChange={(event, newValue) => onSimilarityRangeChange(newValue)}
+            />
+          </Box>
+
           <FormControlLabel
             value="top"
             control={<Switch color="primary" onChange={(event) => onHighlightChange(event.target.checked)} checked={highlight} />}
@@ -35,16 +49,16 @@ function OptionsPanel(props) {
 }
 
 OptionsPanel.propTypes = {
-  id: PropTypes.number.isRequired,
+  similarityRange: PropTypes.arrayOf(PropTypes.number).isRequired,
   highlight: PropTypes.bool.isRequired,
   mask: PropTypes.string.isRequired,
-  onIdChange: PropTypes.func,
+  onSimilarityRangeChange: PropTypes.func,
   onHighlightChange: PropTypes.func,
   onMaskChange: PropTypes.func,
 };
 
 OptionsPanel.defaultProps = {
-  onIdChange: () => {},
+  onSimilarityRangeChange: undefined,
   onHighlightChange: () => {},
   onMaskChange: () => {},
 };

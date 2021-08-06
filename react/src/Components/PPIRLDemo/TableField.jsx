@@ -22,8 +22,8 @@ export function assembleText(diffs, highlight) {
     const diff = diffs[key];
 
     if (diff.type === 'transpose') {
-      text1.push(<span key={key} className={styleTranspose}>{diff.text1 + diff.text2}</span>);
-      text2.push(<span key={key} className={styleTranspose}>{diff.text2 + diff.text1}</span>);
+      text1.push(<span key={key} className={styleTranspose}>{diff.text_1 + diff.text_2}</span>);
+      text2.push(<span key={key} className={styleTranspose}>{diff.text_2 + diff.text_1}</span>);
     } else if (diff.type === 'equal') {
       text1.push(<span key={key}>{diff.text_1}</span>);
       text2.push(<span key={key}>{diff.text_2}</span>);

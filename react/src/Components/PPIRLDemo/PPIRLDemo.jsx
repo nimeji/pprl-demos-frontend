@@ -12,13 +12,20 @@ export default class PPIRLDemo extends React.Component {
     this.state = {
       tableData: undefined,
       id: 8800,
+      similarityRange: [0.7, 0.9],
       highlight: true,
       mask: '',
     };
 
+    this.refresh = this.refresh.bind(this);
+    this.onSimilarityRangeChange = this.onSimilarityRangeChange.bind(this);
     this.onIdChange = this.onIdChange.bind(this);
     this.onHighlightChange = this.onHighlightChange.bind(this);
     this.onMaskChange = this.onMaskChange.bind(this);
+  }
+
+  onSimilarityRangeChange(range) {
+    this.setState({ similarityRange: range });
   }
 
   onIdChange(id) {
@@ -34,11 +41,15 @@ export default class PPIRLDemo extends React.Component {
   }
 
   async refresh() {
-    const { mask } = this.state;
+    const { mask, similarityRange } = this.state;
+    const [min, max] = similarityRange;
 
-    const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/id/8800/mask/${mask}`));
+    const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/mask/${mask}?min=${min}&max=${max}`));
 
-    if (result && result.data) this.setState({ tableData: result.data });
+    if (result && result.data) {
+      this.setState({ tableData: result.data });
+      this.setState({ id: result.data.id });
+    }
   }
 
   async refreshId() {
@@ -51,22 +62,27 @@ export default class PPIRLDemo extends React.Component {
 
   render() {
     const {
-      id, highlight, mask, tableData,
+      similarityRange, id, highlight, mask, tableData,
     } = this.state;
 
     return (
       <Box height="100%" style={{ backgroundColor: 'rgb(220, 220, 220)' }}>
         <Box display="flex" flexDirection="column" justifyContent="spaceBetween" alignItems="center" height="100%" marginX="auto">
           <OptionsPanel
+            similarityRange={similarityRange}
             id={id}
             onIdChange={this.onIdChange}
             highlight={highlight}
+            onSimilarityRangeChange={this.onSimilarityRangeChange}
             onHighlightChange={this.onHighlightChange}
             mask={mask}
             onMaskChange={this.onMaskChange}
           />
-          <Table data={tableData} highlight={highlight} />
-          <Matcher id={id} />
+          <Box>
+            <Table data={tableData} highlight={highlight} />
+          </Box>
+          <Matcher id={id} onNext={this.refresh} />
+          <button type="button" onClick={() => this.refresh()}>refresh</button>
         </Box>
       </Box>
     );
