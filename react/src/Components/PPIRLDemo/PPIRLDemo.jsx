@@ -90,7 +90,6 @@ export default class PPIRLDemo extends React.Component {
             <Table data={tableData} highlight={highlight} />
           </Box>
           <Matcher id={id} onNext={this.refresh} />
-          <button type="button" onClick={() => this.refresh()}>refresh</button>
         </Box>
       </Box>
     );
