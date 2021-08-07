@@ -104,10 +104,8 @@ export default class PPIRLDemo extends React.Component {
             onMaskChange={this.onMaskChange}
             onReset={this.onOptionsReset}
           />
-          <Box>
-            <Table data={tableData} highlight={highlight} />
-          </Box>
-          <Matcher id={id} onNext={this.refresh} />
+          {tableData !== undefined && <Table data={tableData} highlight={highlight} />}
+          {id !== undefined && <Matcher id={id} onNext={this.refresh} />}
         </Box>
       </Box>
     );
