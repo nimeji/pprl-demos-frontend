@@ -11,8 +11,8 @@ export default class PPIRLDemo extends React.Component {
     super(props);
     this.state = {
       tableData: undefined,
-      id: 8800,
-      similarityRange: [0.7, 0.9],
+      id: undefined,
+      similarityRange: [0.5, 0.8],
       highlight: true,
       mask: '',
     };
@@ -22,6 +22,15 @@ export default class PPIRLDemo extends React.Component {
     this.onIdChange = this.onIdChange.bind(this);
     this.onHighlightChange = this.onHighlightChange.bind(this);
     this.onMaskChange = this.onMaskChange.bind(this);
+    this.onOptionsReset = this.onOptionsReset.bind(this);
+  }
+
+  onOptionsReset() {
+    this.setState({
+      mask: undefined,
+      similarityRange: [0.5, 0.8],
+      highlight: true,
+    });
   }
 
   onSimilarityRangeChange(range) {
@@ -37,7 +46,12 @@ export default class PPIRLDemo extends React.Component {
   }
 
   onMaskChange(mask) {
-    this.setState({ mask }, this.refreshId);
+    const { id } = this.state;
+
+    this.setState({ mask }, () => {
+      if (id) this.refreshId();
+      else this.refresh();
+    });
   }
 
   async refresh() {
@@ -59,6 +73,9 @@ export default class PPIRLDemo extends React.Component {
 
   async refreshId() {
     const { id, mask } = this.state;
+
+    if (!id) return;
+
     try {
       const result = await Axios.get(urljoin(process.env.REACT_APP_PPIRL_API, `/id/${id}/mask/${mask}`));
       if (result && result.data) this.setState({ tableData: result.data });
@@ -85,6 +102,7 @@ export default class PPIRLDemo extends React.Component {
             onHighlightChange={this.onHighlightChange}
             mask={mask}
             onMaskChange={this.onMaskChange}
+            onReset={this.onOptionsReset}
           />
           <Box>
             <Table data={tableData} highlight={highlight} />

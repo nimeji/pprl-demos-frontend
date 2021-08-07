@@ -11,7 +11,6 @@ class MaskSelect extends React.Component {
   constructor(props) {
     super(props);
     this.state = { masks: [] };
-    this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
@@ -25,10 +24,13 @@ class MaskSelect extends React.Component {
     }
   }
 
-  handleChange(event) {
-    const { onMaskChange } = this.props;
+  componentDidUpdate(prevProps) {
+    const { mask, onChange } = this.props;
+    const { masks } = this.state;
 
-    onMaskChange(event.target.value);
+    if (mask !== prevProps.mask && mask === undefined && masks.length > 0 && onChange) {
+      onChange(masks[0]);
+    }
   }
 
   render() {
@@ -51,13 +53,11 @@ class MaskSelect extends React.Component {
 }
 
 MaskSelect.propTypes = {
-  onMaskChange: PropTypes.func,
   onChange: PropTypes.func,
   mask: PropTypes.string,
 };
 
 MaskSelect.defaultProps = {
-  onMaskChange: () => {},
   onChange: () => {},
   mask: undefined,
 };
