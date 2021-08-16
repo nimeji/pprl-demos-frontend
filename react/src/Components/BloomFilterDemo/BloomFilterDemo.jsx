@@ -8,6 +8,7 @@ import ResultTable from './ResultTable';
 import CompareTable from './CompareTable';
 import ContentContainer from './ContentContainer';
 import BloomFilterTable from './BloomFilterTable';
+import FormSelect from './FormSelect';
 
 function randomZeroOne(length) {
   let result = '';
@@ -19,28 +20,23 @@ function randomZeroOne(length) {
   return result;
 }
 
-const formKeys = ['firstname', 'surname', 'city', 'zip'];
-const formNames = ['Vorname', 'Nachname', 'Stadt', 'PLZ'];
-
-const defaultFormDisplay = new Map();
-formKeys.forEach((key, i) => { defaultFormDisplay.set(key, formNames[i]); });
-const defaultFormData = new Map();
-formKeys.forEach((key) => { defaultFormData.set(key, ''); });
-
 class BloomFilterDemo extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       results: [],
-      formData: new Map(defaultFormData),
-      formDisplay: new Map(defaultFormDisplay),
+      formData: new Map(),
+      formDisplay: new Map(),
+      // eslint-disable-next-line react/no-unused-state
+      formRequired: new Map(),
       A: undefined,
       B: undefined,
     };
 
     this.onFormConfirm = this.onFormConfirm.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
+    this.onFormTypeChange = this.onFormTypeChange.bind(this);
   }
 
   async onFormConfirm() {
@@ -74,6 +70,18 @@ class BloomFilterDemo extends React.Component {
     this.setState((prevState) => (
       { formData: new Map(prevState.formData).set(key, value) }
     ));
+  }
+
+  onFormTypeChange(form) {
+    this.setState({
+      formData: new Map(form.defaultData),
+      formDisplay: new Map(form.display),
+      // eslint-disable-next-line react/no-unused-state
+      formRequried: new Map(form.requried),
+      results: [],
+      A: undefined,
+      B: undefined,
+    });
   }
 
   deleteResultIndex(index) {
@@ -110,6 +118,7 @@ class BloomFilterDemo extends React.Component {
         style={{ backgroundColor: 'rgb(220, 220, 220)' }}
       >
         <ContentContainer>
+          <FormSelect onChange={this.onFormTypeChange} />
           <DynamicForm
             names={formDisplay}
             values={formData}
