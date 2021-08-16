@@ -24,10 +24,10 @@ function ResultTableRow(props) {
   const tooltip = (
     <Table>
       <TableBody>
-        {Object.entries(tooltipData).map((entry) => (
+        {Array.from(tooltipData, ([key, value]) => (
           <TableRow key={uuidv1()}>
-            <TableCell align="left">{tooltipDisplayNames[entry[0]] || entry[0]}</TableCell>
-            <TableCell align="right">{entry[1]}</TableCell>
+            <TableCell align="left">{tooltipDisplayNames.get(key)}</TableCell>
+            <TableCell align="right">{value}</TableCell>
           </TableRow>
         ))}
       </TableBody>
