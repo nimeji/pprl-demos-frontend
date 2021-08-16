@@ -6,15 +6,19 @@ import OptionsPanel from './OptionsPanel';
 import Table from './Table';
 import Matcher from './Matcher';
 
+const defaultSettings = {
+  similarityRange: [0.7, 0.9],
+  highlight: true,
+  mask: undefined,
+};
+
 export default class PPIRLDemo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tableData: undefined,
       id: undefined,
-      similarityRange: [0.5, 0.8],
-      highlight: true,
-      mask: '',
+      ...defaultSettings,
     };
 
     this.refresh = this.refresh.bind(this);
@@ -27,9 +31,7 @@ export default class PPIRLDemo extends React.Component {
 
   onOptionsReset() {
     this.setState({
-      mask: undefined,
-      similarityRange: [0.5, 0.8],
-      highlight: true,
+      ...defaultSettings,
     });
   }
 
