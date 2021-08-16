@@ -3,6 +3,7 @@ FROM node:13.12.0-alpine as build
 WORKDIR /app
 ARG PPIRL_API
 ARG BLOOMFILTER_API
+ARG BLOOMFILTER_FORMS
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
@@ -11,6 +12,7 @@ RUN npm install react-scripts@3.4.1 -g
 COPY . ./
 ENV REACT_APP_PPIRL_API=$PPIRL_API
 ENV REACT_APP_BLOOMFILTER_API=$BLOOMFILTER_API
+ENV REACT_APP_BLOOMFILTER_FORMS=$BLOOMFILTER_FORMS
 RUN npm run build
 
 #production environment

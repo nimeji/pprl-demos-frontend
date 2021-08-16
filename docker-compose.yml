@@ -7,5 +7,6 @@ services:
       args:
         PPIRL_API: http://192.168.99.102:8000/api/ppirl
         BLOOMFILTER_API: https://run.mocky.io/v3/1acd51c3-9f61-4e9a-a235-51986d59d137
+        BLOOMFILTER_FORMS: https://run.mocky.io/v3/6194d183-edf1-4c09-80fa-efaa21aa26d9
     ports:
       - "2000:80"
