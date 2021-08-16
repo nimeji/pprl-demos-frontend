@@ -3,7 +3,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import Axios from 'axios';
-import DefaultForm from './DefaultForm';
+import DynamicForm from './DynamicForm';
 import ResultTable from './ResultTable';
 import CompareTable from './CompareTable';
 import ContentContainer from './ContentContainer';
@@ -19,44 +19,49 @@ function randomZeroOne(length) {
   return result;
 }
 
+const formKeys = ['firstname', 'surname', 'city', 'zip'];
+const formNames = ['Vorname', 'Nachname', 'Stadt', 'PLZ'];
+
+const defaultFormDisplay = new Map();
+formKeys.forEach((key, i) => { defaultFormDisplay.set(key, formNames[i]); });
+const defaultFormData = new Map();
+formKeys.forEach((key) => { defaultFormData.set(key, ''); });
+
 class BloomFilterDemo extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       results: [],
-      formData: {},
-      formDisplay: {},
+      formData: new Map(defaultFormData),
+      formDisplay: new Map(defaultFormDisplay),
       A: undefined,
       B: undefined,
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onFormConfirm = this.onFormConfirm.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
-    this.setupDisplay = this.setupDisplay.bind(this);
   }
 
-  async onSubmit(event) {
-    event.preventDefault();
-
+  async onFormConfirm() {
     const { formData } = this.state;
 
-    const result = await Axios.post(process.env.REACT_APP_BLOOMFILTER_API, formData);
+    const result = await Axios.post(
+      process.env.REACT_APP_BLOOMFILTER_API,
+      Object.fromEntries(formData),
+    );
 
     if (result && result.data && result.data.result) {
       // for testing only
       result.data.result = randomZeroOne(24);
 
-      // never mutate state directly
-      // use a callback to update variables that depend on previous state
-      // https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
       this.setState((prevState) => (
         {
           results: [
             ...prevState.results,
             {
               result: result.data.result,
-              tooltipData: { ...prevState.formData },
+              tooltipData: new Map(prevState.formData),
               tooltipDisplayNames: prevState.formDisplay,
             },
           ],
@@ -67,29 +72,21 @@ class BloomFilterDemo extends React.Component {
 
   onFormChange(key, value) {
     this.setState((prevState) => (
-      {
-        formData: {
-          ...(prevState.formData),
-          [key]: value,
-        },
-      }
+      { formData: new Map(prevState.formData).set(key, value) }
     ));
-  }
-
-  setupDisplay(display) {
-    // make sure keys in formData have the same order
-    // as those given in the display object
-    const formData = {};
-    Object.keys(display).forEach((key) => { formData[key] = ''; });
-
-    this.setState({ formData, formDisplay: display });
   }
 
   deleteResultIndex(index) {
     this.setState((prevState) => {
+      const { results, A, B } = prevState;
+
       const newResults = [...prevState.results];
       newResults.splice(index, 1);
-      return { results: newResults };
+      return {
+        results: newResults,
+        A: A === results[index] ? undefined : A,
+        B: B === results[index] ? undefined : B,
+      };
     });
   }
 
@@ -113,21 +110,20 @@ class BloomFilterDemo extends React.Component {
         style={{ backgroundColor: 'rgb(220, 220, 220)' }}
       >
         <ContentContainer>
-          <DefaultForm
-            data={formData}
-            display={formDisplay}
-            onSubmit={this.onSubmit}
+          <DynamicForm
+            names={formDisplay}
+            values={formData}
             onChange={this.onFormChange}
-            displayCallback={(display) => this.setupDisplay(display)}
+            onConfirm={this.onFormConfirm}
           />
         </ContentContainer>
 
         <Box display="grid" height="100%" gridTemplateRows="auto auto minmax(0, 1fr)" gridGap="20px">
           <ContentContainer>
             <CompareTable
-              headers={Object.values(formDisplay)}
-              As={Object.keys(formDisplay).map((key) => (A ? A.tooltipData[key] : ''))}
-              Bs={Object.keys(formDisplay).map((key) => (B ? B.tooltipData[key] : ''))}
+              headers={Array.from(formDisplay.values())}
+              As={A ? Array.from(A.tooltipData.values()) : Array(formDisplay.size).fill('')}
+              Bs={B ? Array.from(B.tooltipData.values()) : Array(formDisplay.size).fill('')}
             />
           </ContentContainer>
 
@@ -138,7 +134,7 @@ class BloomFilterDemo extends React.Component {
           <ContentContainer>
             <ResultTable
               data={results}
-              onClickCopy={(data) => this.setState({ formData: { ...data.tooltipData } })}
+              onClickCopy={(data) => this.setState({ formData: new Map(data.tooltipData) })}
               onClickDelete={(index) => this.deleteResultIndex(index)}
               onAChange={(newA) => this.setState({ A: newA })}
               onBChange={(newB) => this.setState({ B: newB })}
