@@ -83,7 +83,7 @@ class FormSelect extends Component {
     ));
 
     return (
-      <FormControl variant="filled">
+      <FormControl variant="filled" fullWidth>
         <Select
           labelId="demo-simple-select-filled-label"
           id="demo-simple-select-filled"
