@@ -34,7 +34,7 @@ class BloomFilterDemo extends React.Component {
     };
 
     this.onFormConfirm = this.onFormConfirm.bind(this);
-    this.onFormChange = this.onFormChange.bind(this);
+    this.onFormContentChange = this.onFormContentChange.bind(this);
     this.onFormTypeChange = this.onFormTypeChange.bind(this);
   }
 
@@ -65,7 +65,7 @@ class BloomFilterDemo extends React.Component {
     }
   }
 
-  onFormChange(key, value) {
+  onFormContentChange(key, value) {
     this.setState((prevState) => (
       { formData: new Map(prevState.formData).set(key, value) }
     ));
@@ -122,7 +122,7 @@ class BloomFilterDemo extends React.Component {
             names={formDisplay}
             values={formData}
             required={formRequired}
-            onChange={this.onFormChange}
+            onChange={this.onFormContentChange}
             onConfirm={this.onFormConfirm}
           />
         </ContentContainer>
