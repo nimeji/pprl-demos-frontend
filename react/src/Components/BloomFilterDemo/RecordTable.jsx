@@ -4,9 +4,9 @@ import {
   Table, TableHead, TableRow, TableBody, TableCell, Box,
 } from '@material-ui/core';
 import { v1 as uuidv1 } from 'uuid';
-import ResultTableRow from './ResultTableRow';
+import RecordTableRow from './RecordTableRow';
 
-class ResultTable extends React.Component {
+class RecordTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -39,13 +39,13 @@ class ResultTable extends React.Component {
     const { selectedA, selectedB } = this.state;
     const { data, onClickCopy, onClickDelete } = this.props;
 
-    const resultList = [];
+    const recordList = [];
 
     data.forEach((row, index) => {
-      resultList.push(
-        <ResultTableRow
+      recordList.push(
+        <RecordTableRow
           key={uuidv1()}
-          result={row.result}
+          record={row.filter}
           tooltipData={row.tooltipData}
           tooltipDisplayNames={row.tooltipDisplayNames}
           onClickCopy={() => onClickCopy(row)}
@@ -75,7 +75,7 @@ class ResultTable extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {resultList}
+              {recordList}
             </TableBody>
           </Table>
         </Box>
@@ -84,7 +84,7 @@ class ResultTable extends React.Component {
   }
 }
 
-ResultTable.propTypes = {
+RecordTable.propTypes = {
   data: PropTypes.array,
   onClickCopy: PropTypes.func,
   onClickDelete: PropTypes.func,
@@ -92,7 +92,7 @@ ResultTable.propTypes = {
   onBChange: PropTypes.func,
 };
 
-ResultTable.defaultProps = {
+RecordTable.defaultProps = {
   data: [],
   onClickCopy: () => {},
   onClickDelete: () => {},
@@ -100,4 +100,4 @@ ResultTable.defaultProps = {
   onBChange: () => {},
 };
 
-export default ResultTable;
+export default RecordTable;

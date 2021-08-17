@@ -8,9 +8,9 @@ import { v1 as uuidv1 } from 'uuid';
 import HTMLTooltip from './HTMLTooltip';
 import TableCell from './TableCell';
 
-function ResultTableRow(props) {
+function RecordTableRow(props) {
   const {
-    result,
+    record,
     tooltipData,
     tooltipDisplayNames,
     selectedA,
@@ -34,8 +34,8 @@ function ResultTableRow(props) {
     </Table>
   );
 
-  const cardinality = (result.match(/1/g) || []).length;
-  const filling = (cardinality / result.length).toPrecision(2);
+  const cardinality = (record.match(/1/g) || []).length;
+  const filling = (cardinality / record.length).toPrecision(2);
 
   return (
     <HTMLTooltip title={tooltip} placement="left" arrow>
@@ -64,17 +64,17 @@ function ResultTableRow(props) {
             onChange={onChangeB}
           />
         </TableCell>
-        <TableCell align="center">{result}</TableCell>
+        <TableCell align="center">{record}</TableCell>
         <TableCell align="right">{cardinality}</TableCell>
-        <TableCell align="right">{result.length}</TableCell>
+        <TableCell align="right">{record.length}</TableCell>
         <TableCell align="right">{filling}</TableCell>
       </TableRow>
     </HTMLTooltip>
   );
 }
 
-ResultTableRow.propTypes = {
-  result: PropTypes.string,
+RecordTableRow.propTypes = {
+  record: PropTypes.string,
   tooltipData: PropTypes.objectOf(
     PropTypes.oneOfType([
       PropTypes.string,
@@ -90,8 +90,8 @@ ResultTableRow.propTypes = {
   onClickDelete: PropTypes.func,
 };
 
-ResultTableRow.defaultProps = {
-  result: '',
+RecordTableRow.defaultProps = {
+  record: '',
   tooltipData: {},
   tooltipDisplayNames: {},
   selectedA: false,
@@ -102,4 +102,4 @@ ResultTableRow.defaultProps = {
   onClickDelete: () => {},
 };
 
-export default ResultTableRow;
+export default RecordTableRow;

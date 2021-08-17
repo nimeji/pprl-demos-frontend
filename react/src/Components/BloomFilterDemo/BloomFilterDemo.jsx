@@ -4,7 +4,7 @@ import {
 import React from 'react';
 import Axios from 'axios';
 import DynamicForm from './DynamicForm';
-import ResultTable from './ResultTable';
+import RecordTable from './RecordTable';
 import CompareTable from './CompareTable';
 import ContentContainer from './ContentContainer';
 import BloomFilterTable from './BloomFilterTable';
@@ -25,7 +25,7 @@ class BloomFilterDemo extends React.Component {
     super(props);
 
     this.state = {
-      results: [],
+      records: [],
       formData: new Map(),
       formDisplay: new Map(),
       formRequired: new Map(),
@@ -46,22 +46,29 @@ class BloomFilterDemo extends React.Component {
       Object.fromEntries(formData),
     );
 
-    if (result && result.data && result.data.result) {
+    if (result && result.data) {
       // for testing only
       result.data.result = randomZeroOne(24);
 
-      this.setState((prevState) => (
-        {
-          results: [
-            ...prevState.results,
-            {
-              result: result.data.result,
-              tooltipData: new Map(prevState.formData),
-              tooltipDisplayNames: prevState.formDisplay,
-            },
-          ],
-        }
-      ));
+      // eslint-disable-next-line no-unused-vars
+      const { type, value } = result.data.attributes.RBF;
+
+      if (type === 'BITSET_BASE64') {
+        this.setState((prevState) => (
+          {
+            records: [
+              ...prevState.records,
+              {
+                filter: result.data.result,
+                tooltipData: new Map(prevState.formData),
+                tooltipDisplayNames: prevState.formDisplay,
+              },
+            ],
+          }
+        ));
+      } else {
+        throw new Error(`${type} is not a valid bloomfilter type`);
+      }
     }
   }
 
@@ -76,7 +83,7 @@ class BloomFilterDemo extends React.Component {
       formData: new Map(form.defaultData),
       formDisplay: new Map(form.display),
       formRequired: new Map(form.required),
-      results: [],
+      records: [],
       A: undefined,
       B: undefined,
     });
@@ -84,14 +91,14 @@ class BloomFilterDemo extends React.Component {
 
   deleteResultIndex(index) {
     this.setState((prevState) => {
-      const { results, A, B } = prevState;
+      const { records, A, B } = prevState;
 
-      const newResults = [...prevState.results];
-      newResults.splice(index, 1);
+      const newrecords = [...prevState.records];
+      newrecords.splice(index, 1);
       return {
-        results: newResults,
-        A: A === results[index] ? undefined : A,
-        B: B === results[index] ? undefined : B,
+        records: newrecords,
+        A: A === records[index] ? undefined : A,
+        B: B === records[index] ? undefined : B,
       };
     });
   }
@@ -101,7 +108,7 @@ class BloomFilterDemo extends React.Component {
       formData,
       formDisplay,
       formRequired,
-      results,
+      records,
       A,
       B,
     } = this.state;
@@ -137,12 +144,12 @@ class BloomFilterDemo extends React.Component {
           </ContentContainer>
 
           <ContentContainer>
-            <BloomFilterTable A={A ? A.result : undefined} B={B ? B.result : undefined} />
+            <BloomFilterTable A={A ? A.filter : undefined} B={B ? B.filter : undefined} />
           </ContentContainer>
 
           <ContentContainer>
-            <ResultTable
-              data={results}
+            <RecordTable
+              data={records}
               onClickCopy={(data) => this.setState({ formData: new Map(data.tooltipData) })}
               onClickDelete={(index) => this.deleteResultIndex(index)}
               onAChange={(newA) => this.setState({ A: newA })}
