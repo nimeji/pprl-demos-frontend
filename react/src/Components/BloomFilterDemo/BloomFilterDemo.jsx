@@ -28,7 +28,6 @@ class BloomFilterDemo extends React.Component {
       results: [],
       formData: new Map(),
       formDisplay: new Map(),
-      // eslint-disable-next-line react/no-unused-state
       formRequired: new Map(),
       A: undefined,
       B: undefined,
@@ -76,8 +75,7 @@ class BloomFilterDemo extends React.Component {
     this.setState({
       formData: new Map(form.defaultData),
       formDisplay: new Map(form.display),
-      // eslint-disable-next-line react/no-unused-state
-      formRequried: new Map(form.requried),
+      formRequired: new Map(form.required),
       results: [],
       A: undefined,
       B: undefined,
@@ -102,6 +100,7 @@ class BloomFilterDemo extends React.Component {
     const {
       formData,
       formDisplay,
+      formRequired,
       results,
       A,
       B,
@@ -122,6 +121,7 @@ class BloomFilterDemo extends React.Component {
           <DynamicForm
             names={formDisplay}
             values={formData}
+            required={formRequired}
             onChange={this.onFormChange}
             onConfirm={this.onFormConfirm}
           />

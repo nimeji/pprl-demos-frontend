@@ -5,6 +5,7 @@ import { Box, Button, TextField } from '@material-ui/core';
 function DynamicForm({
   names,
   values,
+  required,
   onChange,
   onConfirm,
 }) {
@@ -18,6 +19,7 @@ function DynamicForm({
       name={k}
       label={names.get(k)}
       value={v}
+      required={required && required.get(k)}
       onChange={(event) => handleChange(k, event.target.value)}
       fullWidth
     />
@@ -38,11 +40,13 @@ function DynamicForm({
 DynamicForm.propTypes = {
   values: PropTypes.instanceOf(Map).isRequired,
   names: PropTypes.instanceOf(Map).isRequired,
+  required: PropTypes.instanceOf(Map),
   onChange: PropTypes.func,
   onConfirm: PropTypes.func,
 };
 
 DynamicForm.defaultProps = {
+  required: undefined,
   onChange: () => {},
   onConfirm: () => {},
 };
