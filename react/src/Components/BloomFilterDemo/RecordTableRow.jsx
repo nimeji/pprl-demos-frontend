@@ -7,10 +7,11 @@ import PropTypes from 'prop-types';
 import { v1 as uuidv1 } from 'uuid';
 import HTMLTooltip from './HTMLTooltip';
 import TableCell from './TableCell';
+import BloomFilter from './BloomFilter';
 
 function RecordTableRow(props) {
   const {
-    record,
+    filter,
     tooltipData,
     tooltipDisplayNames,
     selectedA,
@@ -33,9 +34,6 @@ function RecordTableRow(props) {
       </TableBody>
     </Table>
   );
-
-  const cardinality = (record.match(/1/g) || []).length;
-  const filling = (cardinality / record.length).toPrecision(2);
 
   return (
     <HTMLTooltip title={tooltip} placement="left" arrow>
@@ -64,17 +62,17 @@ function RecordTableRow(props) {
             onChange={onChangeB}
           />
         </TableCell>
-        <TableCell align="center">{record}</TableCell>
-        <TableCell align="right">{cardinality}</TableCell>
-        <TableCell align="right">{record.length}</TableCell>
-        <TableCell align="right">{filling}</TableCell>
+        <TableCell align="center">{filter.toString('base64')}</TableCell>
+        <TableCell align="right">{filter.cardinality}</TableCell>
+        <TableCell align="right">{filter.length}</TableCell>
+        <TableCell align="right">{filter.fillgrade.toFixed(2)}</TableCell>
       </TableRow>
     </HTMLTooltip>
   );
 }
 
 RecordTableRow.propTypes = {
-  record: PropTypes.string,
+  filter: PropTypes.instanceOf(BloomFilter).isRequired,
   tooltipData: PropTypes.objectOf(
     PropTypes.oneOfType([
       PropTypes.string,
@@ -91,7 +89,6 @@ RecordTableRow.propTypes = {
 };
 
 RecordTableRow.defaultProps = {
-  record: '',
   tooltipData: {},
   tooltipDisplayNames: {},
   selectedA: false,

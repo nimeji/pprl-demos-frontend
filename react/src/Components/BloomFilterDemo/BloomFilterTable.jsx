@@ -9,48 +9,34 @@ import {
 } from '@material-ui/core';
 import { v1 as uuidv1 } from 'uuid';
 import BorderlessTableCell from './TableCell';
-
-function diceCoefficient(l, r) {
-  if (l.length < 1 || l.length !== r.length) return 0;
-
-  let intersection = 0;
-  let left = 0;
-  let right = 0;
-
-  for (let i = 0; i < l.length; i += 1) {
-    if (l[i] === '1') left += 1;
-    if (r[i] === '1') right += 1;
-    if (l[i] === '1' && r[i] === '1') intersection += 1;
-  }
-
-  return (2.0 * intersection) / (left + right);
-}
+import BloomFilter from './BloomFilter';
 
 function BloomFilterTable(props) {
   const { A, B } = props;
 
-  const diceCoeff = useMemo(() => diceCoefficient(A, B), [A, B]);
+  let diceCoeff = '';
+  const AElements = [];
+  const BElements = [];
 
-  const [newA, newB] = useMemo(() => {
-    if (A.length === B.length) {
-      const AElements = [];
-      const BElements = [];
+  if (A && B) {
+    diceCoeff = A.diceCoefficient(B).toFixed(2);
 
-      for (let i = 0; i < A.length; i += 1) {
-        if (A[i] === B[i]) {
-          AElements.push(<span key={uuidv1()}>{A[i]}</span>);
-          BElements.push(<span key={uuidv1()}>{B[i]}</span>);
-        } else {
-          AElements.push(<span key={uuidv1()} className="text-diff">{A[i]}</span>);
-          BElements.push(<span key={uuidv1()} className="text-diff">{B[i]}</span>);
-        }
+    const Astring = A.toString('base64');
+    const Bstring = B.toString('base64');
+
+    for (let i = 0; i < Astring.length; i += 1) {
+      if (Astring[i] === Bstring[i]) {
+        AElements.push(<span key={uuidv1()}>{Astring[i]}</span>);
+        BElements.push(<span key={uuidv1()}>{Bstring[i]}</span>);
+      } else {
+        AElements.push(<span key={uuidv1()} className="text-diff">{Astring[i]}</span>);
+        BElements.push(<span key={uuidv1()} className="text-diff">{Bstring[i]}</span>);
       }
-
-      return [AElements, BElements];
     }
-
-    return [A, B];
-  }, [A, B]);
+  } else {
+    if (A) AElements.push(<span key={uuidv1()}>{A.toString('base64')}</span>);
+    if (B) BElements.push(<span key={uuidv1()}>{B.toString('base64')}</span>)
+  }
 
   return (
     <Table stickyHeader>
@@ -64,12 +50,12 @@ function BloomFilterTable(props) {
       <TableBody>
         <TableRow>
           <BorderlessTableCell variant="head" align="center" style={{ width: '30px' }}>A</BorderlessTableCell>
-          <BorderlessTableCell align="center">{newA}</BorderlessTableCell>
+          <BorderlessTableCell align="center">{AElements}</BorderlessTableCell>
           <BorderlessTableCell align="center" rowSpan="2">{diceCoeff}</BorderlessTableCell>
         </TableRow>
         <TableRow>
           <BorderlessTableCell variant="head" align="center" style={{ width: '30px' }}>B</BorderlessTableCell>
-          <BorderlessTableCell align="center">{newB}</BorderlessTableCell>
+          <BorderlessTableCell align="center">{BElements}</BorderlessTableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -77,13 +63,13 @@ function BloomFilterTable(props) {
 }
 
 BloomFilterTable.propTypes = {
-  A: PropTypes.string,
-  B: PropTypes.string,
+  A: PropTypes.instanceOf(BloomFilter),
+  B: PropTypes.instanceOf(BloomFilter),
 };
 
 BloomFilterTable.defaultProps = {
-  A: '',
-  B: '',
+  A: undefined,
+  B: undefined,
 };
 
-export default BloomFilterTable;
+export default React.memo(BloomFilterTable);

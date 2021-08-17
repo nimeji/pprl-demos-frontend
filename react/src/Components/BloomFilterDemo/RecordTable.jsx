@@ -14,7 +14,6 @@ class RecordTable extends React.Component {
 
     this.updateA = this.updateA.bind(this);
     this.updateB = this.updateB.bind(this);
-    // this.deleteRow = this.deleteRow.bind(this);
   }
 
   updateA(event, newA) {
@@ -45,7 +44,7 @@ class RecordTable extends React.Component {
       recordList.push(
         <RecordTableRow
           key={uuidv1()}
-          record={row.filter}
+          filter={row.filter}
           tooltipData={row.tooltipData}
           tooltipDisplayNames={row.tooltipDisplayNames}
           onClickCopy={() => onClickCopy(row)}

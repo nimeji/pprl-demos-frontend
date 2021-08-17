@@ -22,11 +22,11 @@ function CompareTableText(props) {
     }
   });
 
-  return <>{substrings}</>;
+  return substrings;
 }
 
 CompareTableText.propTypes = {
-  diff: PropTypes.arrayOf(PropTypes.shape([PropTypes.number, PropTypes.string])).isRequired,
+  diff: PropTypes.array.isRequired,
   variant: PropTypes.oneOf(['A', 'B']).isRequired,
 };
 

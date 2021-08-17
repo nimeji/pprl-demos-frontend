@@ -9,16 +9,7 @@ import CompareTable from './CompareTable';
 import ContentContainer from './ContentContainer';
 import BloomFilterTable from './BloomFilterTable';
 import FormSelect from './FormSelect';
-
-function randomZeroOne(length) {
-  let result = '';
-  const characters = '01';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i += 1) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+import BloomFilter from './BloomFilter';
 
 class BloomFilterDemo extends React.Component {
   constructor(props) {
@@ -47,10 +38,6 @@ class BloomFilterDemo extends React.Component {
     );
 
     if (result && result.data) {
-      // for testing only
-      result.data.result = randomZeroOne(24);
-
-      // eslint-disable-next-line no-unused-vars
       const { type, value } = result.data.attributes.RBF;
 
       if (type === 'BITSET_BASE64') {
@@ -59,7 +46,7 @@ class BloomFilterDemo extends React.Component {
             records: [
               ...prevState.records,
               {
-                filter: result.data.result,
+                filter: new BloomFilter(value, 'base64'),
                 tooltipData: new Map(prevState.formData),
                 tooltipDisplayNames: prevState.formDisplay,
               },
