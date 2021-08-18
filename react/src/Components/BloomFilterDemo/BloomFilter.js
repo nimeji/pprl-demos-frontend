@@ -28,7 +28,6 @@ export default class BloomFilter {
         for(let i = 128; i >= 1; i /= 2) {
           bitstring.push((value & i) ? 1 : 0);
         }
-        bitstring.push(' ');
       });
 
       return bitstring.join('');
@@ -51,7 +50,7 @@ export default class BloomFilter {
         }
       }
     }
-    console.log(intersection);
+
     return (2.0 * intersection) / (this.cardinality + other.cardinality);
   }
 }
