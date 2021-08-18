@@ -36,7 +36,21 @@ function RecordTableRow(props) {
   );
 
   return (
-    <HTMLTooltip title={tooltip} placement="left-end" arrow>
+    <HTMLTooltip 
+      title={tooltip}
+      placement="left-end"
+      arrow
+      PopperProps={{
+        popperOptions: {
+          positionFixed: true,
+          modifiers: {
+            preventOverflow: {
+              enabled: true,
+              boundariesElement: "window" // where "window" is the boundary
+            }
+          }
+        }
+      }}>
       <TableRow hover>
         <TableCell align="center" onClick={onClickDelete}>
           <IconButton>
