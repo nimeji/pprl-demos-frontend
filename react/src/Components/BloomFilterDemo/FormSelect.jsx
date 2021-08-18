@@ -12,7 +12,7 @@ class FormSelect extends Component {
     super(props);
 
     this.state = {
-      value: '',
+      method: '',
       forms: {},
     };
 
@@ -28,10 +28,10 @@ class FormSelect extends Component {
     const { onChange } = this.props;
 
     if (forms !== prevState.forms) {
-      const formNames = Object.keys(forms);
-      if (formNames.length > 0) {
-        this.setState({ value: formNames[0] });
-        onChange(forms[formNames[0]]);
+      const methods = Object.keys(forms);
+      if (methods.length > 0) {
+        this.setState({ method: methods[0] });
+        onChange(forms[methods[0]], methods[0]);
       }
     }
   }
@@ -40,9 +40,11 @@ class FormSelect extends Component {
     const { forms } = this.state;
     const { onChange } = this.props;
 
-    this.setState({ value: event.target.value });
+    const method = event.target.value;
 
-    onChange(forms[event.target.value]);
+    this.setState({ method: method });
+
+    onChange(forms[method], method);
   }
 
   async fetchForms() {
@@ -51,7 +53,6 @@ class FormSelect extends Component {
     try {
       result = await Axios.get(process.env.REACT_APP_BLOOMFILTER_FORMS);
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
 
@@ -77,9 +78,9 @@ class FormSelect extends Component {
   }
 
   render() {
-    const { forms, value } = this.state;
-    const menuItems = Object.keys(forms).map((formName) => (
-      <MenuItem key={formName} value={formName}>{formName}</MenuItem>
+    const { forms, method } = this.state;
+    const menuItems = Object.keys(forms).map((value) => (
+      <MenuItem key={value} value={value}>{value}</MenuItem>
     ));
 
     return (
@@ -87,7 +88,7 @@ class FormSelect extends Component {
         <Select
           labelId="demo-simple-select-filled-label"
           id="demo-simple-select-filled"
-          value={value}
+          value={method}
           onChange={this.handleChange}
         >
           {menuItems}
