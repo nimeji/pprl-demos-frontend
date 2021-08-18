@@ -26,7 +26,7 @@ export default class BloomFilter {
 
       this.filter.forEach((value) => {
         for(let i = 128; i >= 1; i /= 2) {
-          bitstring.push(value & i);
+          bitstring.push((value & i) ? 1 : 0);
         }
         bitstring.push(' ');
       });
