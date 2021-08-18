@@ -11,6 +11,27 @@ import BloomFilterTable from './BloomFilterTable';
 import FormSelect from './FormSelect';
 import BloomFilter from './BloomFilter';
 
+function bloomFilterRequest(formData, method) {
+  const attributes = {};
+
+  formData.forEach((value, key) => {
+    attributes[key] = {
+      type: 'STRING',
+      value: value,
+    }
+  });
+
+  return {
+    encodingId: {
+      method: method,
+      project: "exampleProject"
+    },
+    record: {
+      attributes: attributes
+    }
+  };
+}
+
 class BloomFilterDemo extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +41,7 @@ class BloomFilterDemo extends React.Component {
       formData: new Map(),
       formDisplay: new Map(),
       formRequired: new Map(),
+      method: '',
       A: undefined,
       B: undefined,
     };
@@ -30,12 +52,18 @@ class BloomFilterDemo extends React.Component {
   }
 
   async onFormConfirm() {
-    const { formData } = this.state;
+    const { formData, method } = this.state;
 
-    const result = await Axios.post(
-      process.env.REACT_APP_BLOOMFILTER_API,
-      Object.fromEntries(formData),
-    );
+    let result;
+
+    try {
+      result = await Axios.post(
+        process.env.REACT_APP_BLOOMFILTER_API,
+        bloomFilterRequest(formData, method)
+      );
+    } catch (error) {
+      console.error(error);
+    }
 
     if (result && result.data) {
       const { type, value } = result.data.attributes.RBF;
@@ -54,7 +82,7 @@ class BloomFilterDemo extends React.Component {
           }
         ));
       } else {
-        throw new Error(`${type} is not a valid bloomfilter type`);
+        console.error(`${type} is not a valid bloomfilter type`);
       }
     }
   }
@@ -65,11 +93,12 @@ class BloomFilterDemo extends React.Component {
     ));
   }
 
-  onFormTypeChange(form) {
+  onFormTypeChange(form, method) {
     this.setState({
       formData: new Map(form.defaultData),
       formDisplay: new Map(form.display),
       formRequired: new Map(form.required),
+      method: method,
       records: [],
       A: undefined,
       B: undefined,
