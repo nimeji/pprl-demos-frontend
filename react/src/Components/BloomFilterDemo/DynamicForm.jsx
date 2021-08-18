@@ -29,7 +29,7 @@ function DynamicForm({
     <form>
       <Box display="flex" flexDirection="column" justifyContent="flex-start" padding={3}>
         {fields}
-        <Box justifySelf="flex-end" alignSelf="flex-end">
+        <Box justifySelf="flex-end" alignSelf="flex-end" mt={2}>
           <Button variant="contained" onClick={onConfirm}>Senden</Button>
         </Box>
       </Box>
