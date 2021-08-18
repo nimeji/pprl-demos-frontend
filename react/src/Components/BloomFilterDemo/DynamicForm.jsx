@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, TextField } from '@material-ui/core';
 
@@ -9,9 +9,19 @@ function DynamicForm({
   onChange,
   onConfirm,
 }) {
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+
   const handleChange = (key, value) => {
     onChange(key, value);
   };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    
+    setSubmitDisabled(true);
+    await onConfirm();
+    setSubmitDisabled(false);
+  }
 
   const fields = Array.from(values, ([k, v]) => (
     <TextField
@@ -26,11 +36,11 @@ function DynamicForm({
   ));
 
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <Box display="flex" flexDirection="column" justifyContent="flex-start" padding={3}>
         {fields}
         <Box justifySelf="flex-end" alignSelf="flex-end" mt={2}>
-          <Button variant="contained" onClick={onConfirm}>Senden</Button>
+          <Button variant="contained" type="submit">Senden</Button>
         </Box>
       </Box>
     </form>
