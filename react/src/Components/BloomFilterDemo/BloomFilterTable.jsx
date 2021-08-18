@@ -57,11 +57,13 @@ class BloomFilterTable extends Component {
         });
       }
     } else {
-      if (A && (A !== prevProps.A || encoding !== prevState.encoding)) {
-        this.setState({ AElements: [<span key={uuidv1()}>{A.toString(encoding)}</span>] });
+      if (A !== prevProps.A || encoding !== prevState.encoding) {
+        if (A) this.setState({ AElements: [A.toString(encoding)] });
+        else this.setState({ AElements: [] });
       } 
-      if (B && (B !== prevProps.B || encoding !== prevState.encoding)) {
-        this.setState({ BElements: [<span key={uuidv1()}>{B.toString(encoding)}</span>] });
+      if (B !== prevProps.B || encoding !== prevState.encoding) {
+        if(B) this.setState({ BElements: [B.toString(encoding)] });
+        else this.setState({ BElements: [] });
       }
     }
   }
@@ -91,18 +93,18 @@ class BloomFilterTable extends Component {
                 </Select>
               </Box>
             </TableCell>
-            <TableCell align="center">Dice Coefficient</TableCell>
+            <TableCell align="center">DiceCoefficient</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
             <BorderlessTableCell variant="head" align="center" style={{ width: '30px' }}>A</BorderlessTableCell>
-            <BorderlessTableCell align="center">{AElements}</BorderlessTableCell>
+            <BorderlessTableCell align="center" style={{overflowWrap: 'anywhere'}}>{AElements}</BorderlessTableCell>
             <BorderlessTableCell align="center" rowSpan="2">{diceCoeff}</BorderlessTableCell>
           </TableRow>
           <TableRow>
             <BorderlessTableCell variant="head" align="center" style={{ width: '30px' }}>B</BorderlessTableCell>
-            <BorderlessTableCell align="center">{BElements}</BorderlessTableCell>
+            <BorderlessTableCell align="center" style={{overflowWrap: 'anywhere'}}>{BElements}</BorderlessTableCell>
           </TableRow>
         </TableBody>
       </Table>

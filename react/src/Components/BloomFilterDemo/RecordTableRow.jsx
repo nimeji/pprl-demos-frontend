@@ -62,7 +62,7 @@ function RecordTableRow(props) {
             onChange={onChangeB}
           />
         </TableCell>
-        <TableCell align="center">{filter.toString('base64')}</TableCell>
+        <TableCell align="center" style={{overflowWrap: 'anywhere'}}>{filter.toString('base64')}</TableCell>
         <TableCell align="right">{filter.cardinality}</TableCell>
         <TableCell align="right">{filter.length}</TableCell>
         <TableCell align="right">{filter.fillgrade.toFixed(2)}</TableCell>
