@@ -36,7 +36,7 @@ function RecordTableRow(props) {
   );
 
   return (
-    <HTMLTooltip title={tooltip} placement="left" arrow>
+    <HTMLTooltip title={tooltip} placement="left-end" arrow>
       <TableRow hover>
         <TableCell align="center" onClick={onClickDelete}>
           <IconButton>
