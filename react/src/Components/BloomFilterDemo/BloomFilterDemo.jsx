@@ -10,6 +10,7 @@ import ContentContainer from './ContentContainer';
 import BloomFilterTable from './BloomFilterTable';
 import FormSelect from './FormSelect';
 import BloomFilter from './BloomFilter';
+import FormHistory from './FormHistory';
 
 function bloomFilterRequest(formData, method) {
   const attributes = {};
@@ -41,6 +42,7 @@ class BloomFilterDemo extends React.Component {
       formData: new Map(),
       formDisplay: new Map(),
       formRequired: new Map(),
+      formHistory: [],
       history: {},
       method: '',
       A: undefined,
@@ -50,12 +52,16 @@ class BloomFilterDemo extends React.Component {
     this.onFormConfirm = this.onFormConfirm.bind(this);
     this.onFormContentChange = this.onFormContentChange.bind(this);
     this.onFormTypeChange = this.onFormTypeChange.bind(this);
+    this.onFormRestoreHistoryIndex = this.onFormRestoreHistoryIndex.bind(this);
+    this.onFormDeleteHistoryIndex = this.onFormDeleteHistoryIndex.bind(this);
   }
 
   async onFormConfirm() {
-    const { formData, method } = this.state;
+    const { formData, method, formHistory } = this.state;
 
     let result;
+
+    formHistory.unshift(new Map(formData));
 
     try {
       result = await Axios.post(
@@ -133,11 +139,45 @@ class BloomFilterDemo extends React.Component {
     });
   }
 
+  onFormRestoreHistoryIndex(index) {
+    this.setState((prevState) => {
+      const { formData, formHistory, method } = prevState;
+      const historyData = formHistory[index];
+
+      const newFormData = new Map(formData);
+
+      newFormData.forEach((value, key) => {
+        if (historyData.has(key)) {
+          newFormData.set(key, historyData.get(key));
+        } else {
+          newFormData.set(key, '');
+        }
+      });
+
+      return {
+        formData: newFormData,
+      }
+    });
+  }
+
+  onFormDeleteHistoryIndex(index) {
+    this.setState((prevState) => {
+      const newFormHistory = [...prevState.formHistory];
+    
+      newFormHistory.splice(index, 1);
+
+      return {
+        formHistory: newFormHistory,
+      }
+    });
+  }
+
   render() {
     const {
       formData,
       formDisplay,
       formRequired,
+      formHistory,
       records,
       A,
       B,
@@ -153,16 +193,30 @@ class BloomFilterDemo extends React.Component {
         gridGap="20px"
         style={{ backgroundColor: 'rgb(220, 220, 220)' }}
       >
-        <ContentContainer>
-          <FormSelect onChange={this.onFormTypeChange} />
-          <DynamicForm
-            names={formDisplay}
-            values={formData}
-            required={formRequired}
-            onChange={this.onFormContentChange}
-            onConfirm={this.onFormConfirm}
-          />
-        </ContentContainer>
+        <Box
+          height="100%"
+          display="grid"
+          gridGap="20px"
+          gridTemplateRows="min-content auto"
+        >
+          <ContentContainer>
+            <FormSelect onChange={this.onFormTypeChange} />
+            <DynamicForm
+              names={formDisplay}
+              values={formData}
+              required={formRequired}
+              onChange={this.onFormContentChange}
+              onConfirm={this.onFormConfirm}
+            />
+          </ContentContainer>
+          <ContentContainer>
+            <FormHistory
+              history={formHistory}
+              onRestoreIndex={this.onFormRestoreHistoryIndex}
+              onDeleteIndex={this.onFormDeleteHistoryIndex}
+            />
+          </ContentContainer>
+        </Box>
 
         <Box display="grid" height="100%" gridTemplateRows="auto auto minmax(0, 1fr)" gridGap="20px">
           <ContentContainer>
