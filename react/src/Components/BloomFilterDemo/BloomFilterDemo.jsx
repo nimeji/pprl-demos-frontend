@@ -41,6 +41,7 @@ class BloomFilterDemo extends React.Component {
       formData: new Map(),
       formDisplay: new Map(),
       formRequired: new Map(),
+      history: {},
       method: '',
       A: undefined,
       B: undefined,
@@ -94,14 +95,27 @@ class BloomFilterDemo extends React.Component {
   }
 
   onFormTypeChange(form, method) {
-    this.setState({
-      formData: new Map(form.defaultData),
-      formDisplay: new Map(form.display),
-      formRequired: new Map(form.required),
-      method: method,
-      records: [],
-      A: undefined,
-      B: undefined,
+
+    this.setState((prevState) => {
+      const history = { ...prevState.history }
+      history[prevState.method] = {
+        A: prevState.A,
+        B: prevState.B,
+        records: prevState.records,
+      }
+
+      const { A, B, records = [] } = history[method] || {};
+      
+      return {
+        formData: new Map(form.defaultData),
+        formDisplay: new Map(form.display),
+        formRequired: new Map(form.required),
+        method: method,
+        records: records,
+        history: history,
+        A: A,
+        B: B,
+      }
     });
   }
 
@@ -168,6 +182,8 @@ class BloomFilterDemo extends React.Component {
               data={records}
               onClickCopy={(data) => this.setState({ formData: new Map(data.tooltipData) })}
               onClickDelete={(index) => this.deleteResultIndex(index)}
+              selectedA={A}
+              selectedB={B}
               onAChange={(newA) => this.setState({ A: newA })}
               onBChange={(newB) => this.setState({ B: newB })}
             />

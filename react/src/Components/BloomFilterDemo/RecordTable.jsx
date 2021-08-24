@@ -10,8 +10,6 @@ class RecordTable extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-
     this.updateA = this.updateA.bind(this);
     this.updateB = this.updateB.bind(this);
   }
@@ -21,7 +19,6 @@ class RecordTable extends React.Component {
 
     const { onAChange } = this.props;
 
-    this.setState({ selectedA: newA });
     onAChange(newA);
   }
 
@@ -30,13 +27,11 @@ class RecordTable extends React.Component {
 
     const { onBChange } = this.props;
 
-    this.setState({ selectedB: newB });
     onBChange(newB);
   }
 
   render() {
-    const { selectedA, selectedB } = this.state;
-    const { data, onClickCopy, onClickDelete } = this.props;
+    const { data, onClickCopy, onClickDelete, selectedA, selectedB } = this.props;
 
     const recordList = [];
 
@@ -87,6 +82,8 @@ RecordTable.propTypes = {
   data: PropTypes.array,
   onClickCopy: PropTypes.func,
   onClickDelete: PropTypes.func,
+  selectedA: PropTypes.object,
+  selectedB: PropTypes.object,
   onAChange: PropTypes.func,
   onBChange: PropTypes.func,
 };
@@ -95,6 +92,8 @@ RecordTable.defaultProps = {
   data: [],
   onClickCopy: () => {},
   onClickDelete: () => {},
+  selectedA: undefined,
+  selectedB: undefined,
   onAChange: () => {},
   onBChange: () => {},
 };
