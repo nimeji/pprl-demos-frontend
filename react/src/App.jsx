@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import {
-  BrowserRouter,
+  HashRouter,
 } from 'react-router-dom';
 import PPIRLDemo from './Components/PPIRLDemo/PPIRLDemo';
 import BloomFilterDemo from './Components/BloomFilterDemo/BloomFilterDemo';
@@ -48,7 +48,7 @@ export default function App() {
   const classes = useStyles();
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
@@ -87,7 +87,7 @@ export default function App() {
         </ContentWrapper>
 
       </Container>
-    </BrowserRouter>
+    </HashRouter>
 
   );
 }
