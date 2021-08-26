@@ -6,10 +6,11 @@
 
 The API URLs are read from environment variables and can be set in an .env file.
 
-`react/.env`
+e.g. `react/.env.production`
 ```
-REACT_APP_BLOOMFILTER_API = 'https://run.mocky.io/v3/1acd51c3-9f61-4e9a-a235-51986d59d137'
-REACT_APP_PPIRL_API = 'ppirl.nimeji.com/api/ppirl'
+REACT_APP_BLOOMFILTER_API = 'https://run.mocky.io/v3/f8fc8e11-21df-4eb7-8c7d-d44794ef3486'
+REACT_APP_BLOOMFILTER_FORMS = 'https://run.mocky.io/v3/6194d183-edf1-4c09-80fa-efaa21aa26d9'
+REACT_APP_PPIRL_API = 'https://ppirl.nimeji.com/api/ppirl/'
 ```
 
 ---
